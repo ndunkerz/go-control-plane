@@ -24,3 +24,5 @@ require (
 	golang.org/x/text v0.5.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/envoyproxy/go-control-plane => github.com/ndunkerz/go-control-plane v0.11.0
