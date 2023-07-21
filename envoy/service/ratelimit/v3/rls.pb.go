@@ -829,6 +829,8 @@ var file_envoy_service_ratelimit_v3_rls_proto_depIdxs = []int32{
 	5,  // 12: envoy.service.ratelimit.v3.RateLimitResponse.DescriptorStatus.quota:type_name -> envoy.service.ratelimit.v3.RateLimitResponse.Quota
 	2,  // 13: envoy.service.ratelimit.v3.RateLimitService.ShouldRateLimit:input_type -> envoy.service.ratelimit.v3.RateLimitRequest
 	3,  // 14: envoy.service.ratelimit.v3.RateLimitService.ShouldRateLimit:output_type -> envoy.service.ratelimit.v3.RateLimitResponse
+	2,  // 13: envoy.service.ratelimit.v3.RateLimitService.ResetRateLimit:input_type -> envoy.service.ratelimit.v3.RateLimitRequest
+	3,  // 14: envoy.service.ratelimit.v3.RateLimitService.ResetRateLimit:output_type -> envoy.service.ratelimit.v3.RateLimitResponse
 	14, // [14:15] is the sub-list for method output_type
 	13, // [13:14] is the sub-list for method input_type
 	13, // [13:13] is the sub-list for extension type_name
@@ -941,6 +943,7 @@ const _ = grpc.SupportPackageIsVersion6
 type RateLimitServiceClient interface {
 	// Determine whether rate limiting should take place.
 	ShouldRateLimit(ctx context.Context, in *RateLimitRequest, opts ...grpc.CallOption) (*RateLimitResponse, error)
+	ResetRateLimit(ctx context.Context, in *RateLimitRequest, opts ...grpc.CallOption) (*RateLimitResponse, error)
 }
 
 type rateLimitServiceClient struct {
@@ -960,10 +963,20 @@ func (c *rateLimitServiceClient) ShouldRateLimit(ctx context.Context, in *RateLi
 	return out, nil
 }
 
+func (c *rateLimitServiceClient) ResetRateLimit(ctx context.Context, in *RateLimitRequest, opts ...grpc.CallOption) (*RateLimitResponse, error) {
+	out := new(RateLimitResponse)
+	err := c.cc.Invoke(ctx, "/envoy.service.ratelimit.v3.RateLimitService/ResetRateLimit", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RateLimitServiceServer is the server API for RateLimitService service.
 type RateLimitServiceServer interface {
 	// Determine whether rate limiting should take place.
 	ShouldRateLimit(context.Context, *RateLimitRequest) (*RateLimitResponse, error)
+	ResetRateLimit(context.Context, *RateLimitRequest) (*RateLimitResponse, error)
 }
 
 // UnimplementedRateLimitServiceServer can be embedded to have forward compatible implementations.
@@ -996,6 +1009,24 @@ func _RateLimitService_ShouldRateLimit_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RateLimitService_ResetRateLimit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RateLimitRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RateLimitServiceServer).ResetRateLimit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/envoy.service.ratelimit.v3.RateLimitService/ResetRateLimit",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RateLimitServiceServer).ResetRateLimit(ctx, req.(*RateLimitRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _RateLimitService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "envoy.service.ratelimit.v3.RateLimitService",
 	HandlerType: (*RateLimitServiceServer)(nil),
@@ -1003,6 +1034,10 @@ var _RateLimitService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ShouldRateLimit",
 			Handler:    _RateLimitService_ShouldRateLimit_Handler,
+		},
+		{
+			MethodName: "ResetRateLimit",
+			Handler:    _RateLimitService_ResetRateLimit_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
